@@ -1,9 +1,10 @@
 function [vector_signal_without_noise, vector_noise, vector_signal_with_noise, vector_time, sampling_time]= baseband_signal(pulse_duration, samples_per_chip, vector_chip_phase, vector_chip_amplitudes, SNR)
+%% Sampling time
+sampling_time = pulse_duration/samples_per_chip;
 
 %% Vector of signal
-% Bandwidth = 1/sub_pulseTime
-% Time*Bandwidth = pulse_time/sub_pulseTime
-
+    % Bandwidth = 1/sub_pulseTime
+    % Time*Bandwidth = pulse_time/sub_pulseTime
     vector_signal_without_noise=[];
     for i= 1: 1: length(vector_chip_phase)
         if vector_chip_phase(i)==0
@@ -28,10 +29,4 @@ vector_noise_before_snr = randn(1,length(vector_signal_without_noise))+1i*randn(
 
 %% Baseband signal with noise
     vector_signal_with_noise=vector_signal_without_noise+vector_noise;
-    % Signal with time
-    figure(1)
-        plot(vector_time, vector_signal_with_noise);
-        
-%% Sampling time
-sampling_time = pulse_duration/samples_per_chip;
 end
