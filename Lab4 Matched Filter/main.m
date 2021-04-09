@@ -64,7 +64,7 @@ clc
     %% Matched filter - 4.3
     % Barker code 5
         matched_filter_5 = conj(fliplr(vector_signal_without_noise_5));
-        vector_signal_with_noise_output_5 = conv(matched_filter_5, vector_signal_with_noise_5);
+        vector_signal_with_noise_output_5 = abs(conv(matched_filter_5, vector_signal_with_noise_5));
         figure(5)
         title("Linear convulation barker 5");
         hold on
@@ -73,14 +73,14 @@ clc
         figure(6)
         title("logarithmic convulation barker 5");
         hold on
-            semilogx(rescale((0 : 1 :length(vector_signal_with_noise_output_5)-1), 0, pulse_duration) , vector_signal_with_noise_output_5);
+            plot(rescale((0 : 1 :length(vector_signal_with_noise_output_5)-1), 0, pulse_duration) , 20*log10(vector_signal_with_noise_output_5));
         hold off
     %     vector_signal_without_noise_output_5 = conv(matched_filter_5, vector_signal_without_noise_5);
     %     figure(6)
     %         plot(rescale((0 : 1 :length(vector_signal_without_noise_output_5)-1),0,pulse_duration) , vector_signal_without_noise_output_5);
     % Barker code 7
         matched_filter_7 = conj(fliplr(vector_signal_without_noise_7));
-        vector_signal_with_noise_output_7 = conv(matched_filter_7, vector_signal_with_noise_7);
+        vector_signal_with_noise_output_7 = abs(conv(matched_filter_7, vector_signal_with_noise_7));
         figure(7)
         title("Linear convulation barker 7");
         hold on
@@ -89,11 +89,11 @@ clc
         figure(8)
         title("logarithmic convulation barker 7");
         hold on
-            semilogx(rescale((0 : 1 :length(vector_signal_with_noise_output_7)-1), 0, pulse_duration) , vector_signal_with_noise_output_7);
+            plot(rescale((0 : 1 :length(vector_signal_with_noise_output_7)-1), 0, pulse_duration) , 20*log10(vector_signal_with_noise_output_7));
         hold off   
      % Barker code 11
         matched_filter_11 = conj(fliplr(vector_signal_without_noise_11));
-        vector_signal_with_noise_output_11 = conv(matched_filter_11, vector_signal_with_noise_11);
+        vector_signal_with_noise_output_11 = abs(conv(matched_filter_11, vector_signal_with_noise_11));
         figure(9)
         title("Linear convulation barker 11");
         hold on
@@ -102,11 +102,11 @@ clc
         figure(10)
         title("logarithmic convulation barker 11");
         hold on
-            semilogx(rescale((0 : 1 :length(vector_signal_with_noise_output_11)-1), 0, pulse_duration) , vector_signal_with_noise_output_11);
+            plot(rescale((0 : 1 :length(vector_signal_with_noise_output_11)-1), 0, pulse_duration) , 20*log10(vector_signal_with_noise_output_11));
         hold off
       % Barker code 13
         matched_filter_13 = conj(fliplr(vector_signal_without_noise_13));
-        vector_signal_with_noise_output_13 = conv(matched_filter_13, vector_signal_with_noise_13);
+        vector_signal_with_noise_output_13 = abs(conv(matched_filter_13, vector_signal_with_noise_13));
         figure(11)
         title("Linear convulation barker 13");
         hold on
@@ -115,19 +115,18 @@ clc
         figure(12)
         title("logarithmic convulation barker 13");
         hold on
-            semilogx(rescale((0 : 1 :length(vector_signal_with_noise_output_13)-1), 0, pulse_duration) , vector_signal_with_noise_output_13);
+            plot(rescale((0 : 1 :length(vector_signal_with_noise_output_13)-1), 0, pulse_duration) , 20*log10(vector_signal_with_noise_output_13));
         hold off  
     %% 4.4     Make a linear plot of the matched filter output and the input signal for a Barker code of length K=13 when the SNR changes from 30 dB to -10 dB in steps of 10 dB. Make comments about the results (peak level, sidelobe level, peak width, ...).
         figure(13)
         title("Linear convulation barker 13 SNR changing from -10 to +30 db");
         hold on
         for(snr_changes = -10: 10 : 30 )
-            disp("snr_changes: "+snr_changes);
             % Barker code 13
             [vector_signal_without_noise_13_changes, vector_noise_13_changes, vector_signal_with_noise_13_changes, vector_time_13_changes, sampling_time_13_changes] = baseband_signal(pulse_duration, samples_per_chip, vector_chip_phase_13, vector_chip_amplitudes, snr_changes);
             % Barker code 13
             matched_filter_13_changes = conj(fliplr(vector_signal_without_noise_13_changes));
-            vector_signal_with_noise_output_13_changes = conv(matched_filter_13_changes, vector_signal_with_noise_13_changes);
+            vector_signal_with_noise_output_13_changes = abs(conv(matched_filter_13_changes, vector_signal_with_noise_13_changes));
             plot(rescale((0 : 1 :length(vector_signal_with_noise_output_13_changes)-1), 0, pulse_duration) , vector_signal_with_noise_output_13_changes);
             hold on
         end
