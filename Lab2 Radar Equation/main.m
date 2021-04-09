@@ -2,27 +2,32 @@ close all; clear all; clc;
 
 %2.2
 %input data
-Pt = 1.5E6;
+Pt = 1.5E6*2;
 G = 45;
 f = 5.6E9;
 B = 5E6;
 NF = 3;
-L = 0;
+L = -3;
 A = 1;
 R = 1000*(20:200);
 
-SNR1 = snr_monostatic_radar(Pt,G,f,B,NF,L,A,R);
+SNR1 = snr_monostatic_radar(Pt/2,G,f,B,NF,L,A,R);
 
-figure(1)
-plot(R/1000,SNR1,'LineWidth',2);
-grid on
-xlabel('Range [km]');
-ylabel('SNR [-]');
+ figure(1)
+ plot(R/1000,SNR1,'LineWidth',2);
+ grid on
+ xlabel('Range [km]');
+ ylabel('SNR [-]');
 
 figure(2)
-SNR1dB = log10(SNR1);
+SNR1dB = 10*log10(SNR1);
 semilogx(R/1000,SNR1dB,'LineWidth',2);
 grid on
+% hold on
+% SNR1 = snr_monostatic_radar(Pt/2,G,f,B,NF,L,A,R);
+% SNR1dB = log10(SNR1);
+% semilogx(R/1000,SNR1dB,'LineWidth',2);
+% legend()
 xlabel('Range [km]');
 ylabel('SNR [dB]');
 

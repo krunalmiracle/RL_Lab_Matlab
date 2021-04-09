@@ -71,20 +71,20 @@ vector_time_tags_pulse_burst_samples = (0:1/frequency_sampling:num_pulses*PRI-(1
     % figure
     % plot(vector_time_tags_pulse_burst_samples_reflected,vector_pulse);
 %% FFT --> frequency spectrum of the signal
-    [f1,s1] = psdfft("Unmodulated single pulse", frequency_sampling, vector_pulse_voltage, length(t));
-    
-    [f2,s2] = psdfft("Unmodulated pulse burst", frequency_sampling, vector_pulse_voltage_burst, length(vector_time_tags_pulse_burst_samples));
-    
-    [f3,s3] = psdfft("Modulated pulse burst", frequency_sampling, vector_pulse_voltage_burst_samples, length(vector_time_tags_pulse_burst_samples));
-    figure
-    title("Frequency spectrum of the signal")
-    hold on
-    plot(f1,s1);
-    hold on
-    plot(f2,s2);
-    hold on
-    plot(f3,s3);
-    hold on
-    legend("Unmodulated single pulse", "Unmodulated pulse burst", "Modulated pulse burst");
-    hold off
+%     [f1,s1] = psdfft("Unmodulated single pulse", frequency_sampling, vector_pulse_voltage, length(t));
+%     
+%     [f2,s2] = psdfft("Unmodulated pulse burst", frequency_sampling, vector_pulse_voltage_burst, length(vector_time_tags_pulse_burst_samples));
+%     
+%     [f3,s3] = psdfft("Modulated pulse burst", frequency_sampling, vector_pulse_voltage_burst_samples, length(vector_time_tags_pulse_burst_samples));
+%     figure
+%     title("Frequency spectrum of the signal")
+%     hold on
+%     plot(f1,s1);
+%     hold on
+%     plot(f2,s2);
+%     hold on
+%     plot(f3,s3);
+%     hold on
+%     legend("Unmodulated single pulse", "Unmodulated pulse burst", "Modulated pulse burst");
+%     hold off
 end

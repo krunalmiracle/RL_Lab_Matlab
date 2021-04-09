@@ -2,7 +2,7 @@ clear;
 pulse_width = 1e-6;
 PRI = 5e-6;
 frequency_carrier = 5e6;
-peak_transmited_power = 1e6;
+peak_transmited_power = 1e12;
 signal_losses = 3;
 num_pulses = 5;
 frequency_sampling = 100e6;
@@ -11,6 +11,22 @@ distance_to_target = 450;
  [ blind_range, unambiguous_range, PRF, range_resolution, duty_cycle, mean_received_power, pulse_energy, vector_pulse_voltage_burst_samples, vector_time_tags_pulse_burst_samples  ] = ...
     pulse_burst( pulse_width, PRI, frequency_carrier, peak_transmited_power, signal_losses, num_pulses, frequency_sampling, distance_to_target)
 
+[f1,s1] = psdfft("Modulated pulse burst", frequency_sampling, vector_pulse_voltage_burst_samples, length(vector_time_tags_pulse_burst_samples));
+peak_transmited_power = 5e11;
+pulse_width = 2e-6;
+ [ blind_range, unambiguous_range, PRF, range_resolution, duty_cycle, mean_received_power, pulse_energy, vector_pulse_voltage_burst_samples, vector_time_tags_pulse_burst_samples  ] = ...
+    pulse_burst( pulse_width, PRI, frequency_carrier, peak_transmited_power, signal_losses, num_pulses, frequency_sampling, distance_to_target)
+
+[f2,s2] = psdfft("Modulated pulse burst", frequency_sampling, vector_pulse_voltage_burst_samples, length(vector_time_tags_pulse_burst_samples));
+figure
+    title("Frequency spectrum of the signal")
+    hold on
+    plot(f1,s1);
+    hold on
+    plot(f2,s2);
+    hold on
+    legend("Modulated pulse burst", "Modulated pulse burstx2 pulse width");
+    hold off
 %% 1.3
 %     clear; clc;
 %     pulse_width = 1e-6;
