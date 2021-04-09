@@ -1,5 +1,5 @@
 
-function [] = Barker6Gen(Tchip,samples_per_chip)
+function [] = Barker6Gen(chip_pulse_duration,samples_per_chip)
 
     ampsBarker6 = ones(1,6); % Barker 6 code amplitude array
     nSamples = samples_per_chip*length(ampsBarker6); % Num samples per chip multiplied by the number of chips. In this case, it is a Barker 6
