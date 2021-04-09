@@ -11,7 +11,7 @@ clc
     vector_chip_phase_13=[0 0 0 0 0 180 180 0 0 180 0 180 0];
 %% 4.2 Make a pulse burst
     chip_pulse_duration = 1e-6; 
-    samples_per_chip = 20;
+    samples_per_chip = 40;
     SNR=30; % db
     vector_chip_amplitudes = 1; % Just a peak amplitude
     % Barker code 5
@@ -135,25 +135,25 @@ clc
     %% PART II - Robustness of the matched filter to non-expected Barker signals and Doppler shifts.
     
     %% 4.5 -  Matched filter of barker 5 with barker B-5, B-7, B-11, B-13
-    chip_pulse_duration = 0.1e-6; 
-    samples_per_chip = 20;
-    SNR=30; % db
+    chip_pulse_duration = 1e-6; 
+    samples_per_chip = 40;
+    SNR=50; % db
     vector_chip_amplitudes = 1; % Just a peak amplitude
     % Barker code 5
     [vector_signal_without_noise_5, vector_noise_5, vector_signal_with_noise_5, vector_time_5, sampling_time_5] = baseband_signal(chip_pulse_duration, samples_per_chip, vector_chip_phase_5, vector_chip_amplitudes, SNR);
     [vector_signal_without_noise_7, vector_noise_7, vector_signal_with_noise_7, vector_time_7, sampling_time_7] = baseband_signal(chip_pulse_duration, samples_per_chip, vector_chip_phase_7, vector_chip_amplitudes, SNR);
-    [vector_signal_without_noise_11, vector_noise_11, vector_signal_with_noise_11, vector_time_11, sampling_time_11] = baseband_signal(chip_pulse_duration, samples_per_chip, vector_chip_phase_11, vector_chip_amplitudes, SNR);
-    [vector_signal_without_noise_13, vector_noise_13, vector_signal_with_noise_13, vector_time_13, sampling_time_13] = baseband_signal(chip_pulse_duration, samples_per_chip, vector_chip_phase_13, vector_chip_amplitudes, SNR);
+   % [vector_signal_without_noise_11, vector_noise_11, vector_signal_with_noise_11, vector_time_11, sampling_time_11] = baseband_signal(chip_pulse_duration, samples_per_chip, vector_chip_phase_11, vector_chip_amplitudes, SNR);
+   % [vector_signal_without_noise_13, vector_noise_13, vector_signal_with_noise_13, vector_time_13, sampling_time_13] = baseband_signal(chip_pulse_duration, samples_per_chip, vector_chip_phase_13, vector_chip_amplitudes, SNR);
    
-    matched_filter_5 = conj(fliplr(vector_signal_without_noise_5));
+    matched_filter_7 = conj(fliplr(vector_signal_without_noise_7));
     %Mismatching barker filter with codes - Output
-        vector_signal_with_noise_output_5 = abs(conv(matched_filter_5, vector_signal_with_noise_5));
-        vector_signal_with_noise_output_7 = abs(conv(matched_filter_5, vector_signal_with_noise_7));
-        vector_signal_with_noise_output_11 = abs(conv(matched_filter_5, vector_signal_with_noise_11));
-        vector_signal_with_noise_output_13 = abs(conv(matched_filter_5, vector_signal_with_noise_13));
+        vector_signal_with_noise_output_5 = abs(conv(matched_filter_7, vector_signal_with_noise_5));
+%         vector_signal_with_noise_output_7 = abs(conv(matched_filter_7, vector_signal_with_noise_7));
+%         vector_signal_with_noise_output_11 = abs(conv(matched_filter_7, vector_signal_with_noise_11));
+%         vector_signal_with_noise_output_13 = abs(conv(matched_filter_7, vector_signal_with_noise_13));
     % Barker code 5
         figure(14)
-            title("Linear convulation matched filter barker 5");
+            title("Linear convulation matched filter barker 7");
             hold on
             plot(rescale((0 : 1 :length(vector_signal_with_noise_output_5)-1), 0, chip_pulse_duration) , vector_signal_with_noise_output_5, 'DisplayName', 'K = 5');
 %         hold off
@@ -172,6 +172,8 @@ clc
 %         figure(16)
 %         title("Linear convulation barker 11 - mismatched");
         hold on
+        legend("Barker 5", "Barker 7");
+        hold off
             plot(rescale((0 : 1 :length(vector_signal_with_noise_output_11)-1), 0, chip_pulse_duration) , vector_signal_with_noise_output_11, 'DisplayName', 'K = 11');
 %         hold off
 %         figure(10)
@@ -191,24 +193,38 @@ clc
 %             plot(rescale((0 : 1 :length(vector_signal_with_noise_output_13)-1), 0, pulse_duration) , 20*log10(vector_signal_with_noise_output_13));
 %         hold off  
     %% 4.6 - Doppler effect on the barker code
-    chip_pulse_duration = 0.1e-6; % [s]
-    samples_per_chip = 10; % Samples/chip
+    chip_pulse_duration = 1e-6; % [s]
+    samples_per_chip = 40; % Samples/chip
     frequency_carrier = 2.8e9; % Hz
-    velocity_radial = 60000*1000/3600; % km/h -> m/s
+    velocity_radial = 4000*1000/3600; % km/h -> m/s
     c = 3e8;
-    SNR=30; % db
+    SNR=20; % db
     vector_chip_amplitudes = 1; % Just a peak amplitude
     % Barker code 5
-    [vector_signal_without_noise_13, vector_noise_13, vector_signal_with_noise_13, vector_time_13, sampling_time_13] = baseband_signal(chip_pulse_duration, samples_per_chip, vector_chip_phase_13, vector_chip_amplitudes, SNR);
-    [vector_signal_with_dopplershift_noise] = doppler_shift(vector_signal_with_noise_13, chip_pulse_duration, frequency_carrier, velocity_radial, samples_per_chip);
-    matched_filter_13 = conj(fliplr(vector_signal_without_noise_13));
-    vector_signal_with_noise_output_13 = abs(conv(matched_filter_13, vector_signal_with_noise_13));
-    vector_signal_with_noise_output_13_dopplershift_noise = abs(conv(matched_filter_13, vector_signal_with_dopplershift_noise));
-    figure(15);
-    plot(rescale((0 : 1 :length(vector_signal_with_noise_output_13)-1), 0, chip_pulse_duration) ,vector_signal_with_noise_output_13, 'DisplayName', 'Static'); hold on
-    plot(rescale((0 : 1 :length(vector_signal_with_noise_output_13_dopplershift_noise)-1), 0, chip_pulse_duration) ,vector_signal_with_noise_output_13_dopplershift_noise, 'DisplayName', 'Doppler');
+    [vector_signal_without_noise_7, vector_noise_7, vector_signal_with_noise_7, vector_time_7, sampling_time_7] = baseband_signal(chip_pulse_duration, samples_per_chip, vector_chip_phase_7, vector_chip_amplitudes, SNR);
+    
+    %% Exercise 5 a)
+
+    [vector_signal_with_dopplershift_noise] = doppler_shift(vector_signal_with_noise_7, chip_pulse_duration, frequency_carrier, velocity_radial, samples_per_chip);
+    Yr = real(vector_signal_with_dopplershift_noise);
+    Yim = imag(vector_signal_with_dopplershift_noise);
+     figure(15);
+    plot(rescale((0 : 1 :length(Yr)-1), 0, chip_pulse_duration) ,Yr, 'DisplayName', 'Real'); hold on
+    plot(rescale((0 : 1 :length(Yim)-1), 0, chip_pulse_duration) ,Yim, 'DisplayName', 'Imaginary');
     legend;
-    title('Output of matched filter (30 dB) K = 13 with Doppler');
+    title('Before the matched filter, doppler with noise');
+    xlabel('Delay [n*sampleTime]');
+    ylabel('Amplitude [linear]');
+    hold off
+    z = complex(Yr,Yim);
+    magnitude = abs(z);
+    matched_filter_7 = conj(fliplr(vector_signal_without_noise_7));
+    matched_magnitude= abs(conv(matched_filter_7, magnitude));
+    figure(16);
+    
+    plot(rescale((0 : 1 :length(matched_magnitude)-1), 0, chip_pulse_duration) ,matched_magnitude, 'DisplayName', 'Magnitude'); hold on
+    legend;
+    title('Output of doppler fo the magnitude of the signal');
     xlabel('Delay [n*sampleTime]');
     ylabel('Amplitude [linear]');
     hold off
