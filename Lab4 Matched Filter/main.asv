@@ -1,0 +1,25 @@
+clear all
+close all
+clc
+%% Barker codes
+    vector_chip_phase_5=[0 0 0 180 0];
+
+    vector_chip_phase_7=[0 0 0 180 180 0 180];
+
+    vector_chip_phase_11=[0 0 0 180 180 180 0 180 180 0 180];
+    
+    vector_chip_phase_13=[0 0 0 0 0 180 180 0 0 180 0 180 0];
+%% 4.2 Make a pulse burst
+pulse_duration = 1e-6; 
+samples_per_chip = 100;
+SNR=-20;
+vector_chip_amplitudes = 10;
+[vector_signal_without_noise, vector_noise, vector_signal_with_noise, vector_time, sampling_time] = baseband_signal(pulse_duration, samples_per_chip, vector_chip_phase_5, vector_chip_amplitudes, SNR);
+    %% Matched filter - 4.3
+    matched_filter = conj(fliplr(vector_signal_without_noise));
+    vector_signal_with_noise_output = conv(matched_filter, vector_signal_with_noise);
+    figure(2)
+        plot(rescale((0 : 1 :length(vector_signal_with_noise_output)-1),0,pulse_duration) , vector_signal_with_noise_output);
+    vector_signal_without_noise_output = conv(matched_filter, vector_signal_without_noise);
+    figure(3)
+        plot(rescale((0 : 1 :length(vector_signal_without_noise_output)-1),0,pulse_duration) , vector_signal_without_noise_output);
