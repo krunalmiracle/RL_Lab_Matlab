@@ -3,29 +3,29 @@ function [vector_signal_without_noise, vector_noise, vector_signal_with_noise, v
 nSamples = samples_per_chip*length(vector_chip_phase);
 sampling_time = pulse_duration/nSamples;
 
-%% Vector of signal
-    vector_signal_without_noise=[];
-    for i= 1: 1: length(vector_chip_phase)
-        if vector_chip_phase(i)==0
-        b=ones(1,samples_per_chip)*vector_chip_amplitudes;
-        else
-        b=-1*ones(1,samples_per_chip)*vector_chip_amplitudes;
-        end
-        vector_signal_without_noise=[vector_signal_without_noise,b];
-    end
+    %% Get the pulse signal, with the chips and their corresponding phase
+vector_signal_without_noise = zeros(1,nSamples); % We first create the length of the array
+for n=1:length(vector_chip_phase)
+   for i=1:samples_per_chip
+       if(vector_chip_phase(n) == 180)
+          % We put in every sample the value of the chip the sample is in 
+          vector_signal_without_noise((n-1)*samples_per_chip+i) = -1*vector_chip_amplitudes; 
+       elseif(vector_chip_phase(n) == 0)
+          % We put in every sample the value of the chip the sample is in 
+          vector_signal_without_noise((n-1)*samples_per_chip+i) = 1*vector_chip_amplitudes; 
+       end
+   end
+end
 %% Time vector
     vector_time = rescale((0 : 1 :length(vector_signal_without_noise)-1),0,pulse_duration);
 
-%% Noise
-vector_noise_before_snr = randn(1,length(vector_signal_without_noise))+1i*randn(1,length(vector_signal_without_noise)); 
-
-%% SNR to Signal/Noise vector correction
-    Ps = sum(abs(vector_noise_before_snr).^2);
-    snr=10^(SNR/10);
-    power_noise=Ps/snr;
-    power_noise_before_snr=sum(abs(vector_noise_before_snr).^2);
-    vector_noise=vector_noise_before_snr*sqrt(power_noise/power_noise_before_snr);
-
+%% Noise - SNR to Signal/Noise vector correction
+    %Ps = sum(vector_noise_before_snr.^2);
+    SNR=10^(SNR/20);
+    % Create the noise vector
+    vector_noise = randn(1,nSamples)+ 1i*randn(1,nSamples);
+    % Get the amplitude factor that we have to multiply for in noiseArray
+    vector_noise = vector_noise/SNR;
 %% Baseband signal with noise
-    vector_signal_with_noise=vector_signal_without_noise+vector_noise;
+    vector_signal_with_noise = vector_signal_without_noise+vector_noise;
 end
